@@ -382,6 +382,14 @@ local function fire(event, ...)
 		end
 	end
 end
+-- like the client: changing tracking fires MINIMAP_UPDATE_TRACKING; and every read of the tracking
+-- list is counted (each makes a table per entry, so the addon mustn't read it every frame)
+local trackingReads = 0
+do
+	local set, get = base.C_Minimap.SetTracking, base.C_Minimap.GetTrackingInfo
+	base.C_Minimap.SetTracking = function(i, v) set(i, v); fire("MINIMAP_UPDATE_TRACKING") end
+	base.C_Minimap.GetTrackingInfo = function(i) trackingReads = trackingReads + 1; return get(i) end
+end
 
 ---------------------------------------------------------------- load the TOC
 local NS = {}   -- the addon-private table every file receives as its 2nd vararg
@@ -1375,6 +1383,22 @@ if not Apex then errors[#errors + 1] = "ApexGatherer global missing after load" 
 		assert(point == "TOPLEFT" and x == 120 and y == -40, "not put back where it was left")
 		panel:Hide()
 		Apex.db.global.settingsPoint = nil
+	end)
+	step("no churn: the tracking list is read every couple of seconds, not every frame", function()
+		local overlay, lines = W.ApexGathererHUDOverlay, W.ApexGathererRouteLines
+		at(0.5, 0.5)
+		HUD:Open(); tick()
+		local before = trackingReads
+		for _ = 1, 200 do   -- ten seconds of frames, walking
+			clockOffset = clockOffset + 0.05
+			player[1] = player[1] + 0.0005
+			pump()
+			overlay.__scripts.OnUpdate(overlay, 0.05)
+			lines.__scripts.OnUpdate(lines, 0.05)
+		end
+		HUD:Close()
+		local passes = (trackingReads - before) / W.C_Minimap.GetNumTrackingTypes()
+		assert(passes <= 7, ("read the tracking list %d times in ten seconds"):format(passes))
 	end)
 	step("HUD: only Forever tracking types are offered", function()
 		local names = {}

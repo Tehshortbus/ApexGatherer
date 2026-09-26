@@ -86,16 +86,34 @@ function Apex:TrackingRangeYards()
 end
 
 -- the tracking that shows a kind's nodes on the minimap: Find Minerals, Find Herbs, Find Fish,
--- Find Treasure. Returns nil when the client has no such spell, else whether it is on.
+-- Find Treasure. The client's tracking list makes a new table for every entry each time it's
+-- read, so it's read in one pass and kept until tracking changes (and a couple of seconds at
+-- most): pins and route lines ask many times a second.
 local TRACKING_SPELL = { Mining = 2580, Herbalism = 2383, Fishing = 43308, Treasure = 2481 }
-local function trackingOn(kind)
-	local wanted = TRACKING_SPELL[kind] and C_Spell.GetSpellName(TRACKING_SPELL[kind])
-	if not wanted then return nil end
+local TRACKING_KEEP = 2
+local trackingState = {}         -- kind -> nil (the client has no such spell), true (on) or false (off)
+local trackingKind = {}          -- tracking name -> kind, while reading
+local trackingRead = -math.huge  -- when the list was read; -math.huge to read it again
+
+local function readTracking()
+	trackingRead = GetTime()
+	wipe(trackingKind)
+	for kind, spell in pairs(TRACKING_SPELL) do
+		local name = C_Spell.GetSpellName(spell)
+		trackingState[kind] = name and false or nil
+		if name then trackingKind[name] = kind end
+	end
 	for i = 1, C_Minimap.GetNumTrackingTypes() do
 		local info = C_Minimap.GetTrackingInfo(i)
-		if info and info.name == wanted then return info.active end
+		local kind = info and trackingKind[info.name]
+		if kind then trackingState[kind] = info.active and true or false end
 	end
-	return false
+end
+
+-- nil when the client has no such spell, else whether it is on
+local function trackingOn(kind)
+	if GetTime() - trackingRead > TRACKING_KEEP then readTracking() end
+	return trackingState[kind]
 end
 
 -- whether a kind counts as tracked for showing its routes; a kind without a tracking spell does,
@@ -208,6 +226,7 @@ local defaults = {
 
 function Apex:OnInitialize()
 	self.db = LibStub("AceDB-3.0"):New("ApexGathererDB", defaults, true)
+	self:RegisterEvent("MINIMAP_UPDATE_TRACKING", function() trackingRead = -math.huge end)
 
 	local nodes = type(ApexGathererNodes) == "table" and ApexGathererNodes or {}
 	ApexGathererNodes = nodes
