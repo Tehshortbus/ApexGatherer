@@ -6,18 +6,11 @@ The gathering addon for **WoW Forever**. It records every Mining, Herbalism, Fis
 
 1. On this page, click **Code → Download ZIP**.
 2. Unzip it. GitHub names the folder after the branch, so you get **`ApexGatherer-main`**.
-3. **Rename that folder to exactly `ApexGatherer`**. The folder name has to match the addon's `ApexGatherer.toc` file, or the game won't load it.
+3. **Rename that folder to exactly `ApexGatherer`**, or the game won't load it.
 4. Move it into the `Interface\AddOns` folder of your WoW Forever client, for example:
 
    ```
-   World of Warcraft\_classic_beta_\Interface\AddOns\ApexGatherer\
-   ```
-
-   The `.toc` file must sit directly inside that folder:
-
-   ```
-   ...\Interface\AddOns\ApexGatherer\ApexGatherer.toc     ✔ right
-   ...\Interface\AddOns\ApexGatherer\ApexGatherer-main\…  ✘ one folder too deep
+   World of Warcraft\_classic_beta_\Interface\AddOns\ApexGatherer
    ```
 
 5. Start the game, or restart it if it was running. A `/reload` doesn't pick up a new addon folder.
