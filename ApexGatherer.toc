@@ -1,0 +1,46 @@
+## Interface: 120100, 16001
+## Title: ApexGatherer
+## Notes: The gathering addon for WoW Forever: records Mining, Herbalism, Fishing and Treasure nodes on your maps, builds short farming routes from them, shows it all on a HUD while you farm, and swaps nodes with your guild.
+## Version: 2.1.0
+## SavedVariables: ApexGathererDB, ApexGathererNodes, ApexGathererRoutes
+## IconTexture: Interface\AddOns\ApexGatherer\Media\Icon
+## Category: Map
+
+# Libraries
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\AceComm-3.0\AceComm-3.0.xml
+Libs\HereBeDragons\HereBeDragons-2.0.lua
+Libs\HereBeDragons\HereBeDragons-Pins-2.0.lua
+
+# Core: saved data, the node catalog and database, gathering, pins, sharing
+Core\Init.lua
+Core\Catalog.lua
+Core\Nodes.lua
+Core\Collector.lua
+Core\Pins.lua
+Core\Sharing.lua
+
+# Routes: route data, optimizer, drawing, on-map editor, panel
+Routes\Optimizer.lua
+Routes\Routes.lua
+Routes\Drawing.lua
+Routes\Editor.lua
+Routes\Options.lua
+Routes\Flyout.lua
+
+# HUD: the minimap's textures by file id, the HUD, its settings
+HUD\MinimapTiles.lua
+HUD\HUD.lua
+HUD\Options.lua
+
+# Settings, FAQ, minimap button and slash commands
+UI\FAQ.lua
+UI\Settings.lua
+UI\Launcher.lua

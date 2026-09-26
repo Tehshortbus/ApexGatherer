@@ -1,0 +1,20 @@
+<Bindings>
+	<Binding name="APEXGATHERER_HUD" header="APEXGATHERER" category="ADDONS">
+		ApexGatherer:ToggleHUD()
+	</Binding>
+	<Binding name="APEXGATHERER_HUD_MOUSE" category="ADDONS">
+		ApexGatherer:GetModule("HUD"):ToggleMouse()
+	</Binding>
+	<Binding name="APEXGATHERER_HUD_BACKGROUND" category="ADDONS">
+		ApexGatherer:GetModule("HUD"):ToggleBackground()
+	</Binding>
+	<Binding name="APEXGATHERER_ROUTES" category="ADDONS">
+		ApexGatherer:ToggleRoutes()
+	</Binding>
+	<Binding name="APEXGATHERER_MINIMAP_PINS" category="ADDONS">
+		ApexGatherer:TogglePins("minimap")
+	</Binding>
+	<Binding name="APEXGATHERER_WORLDMAP_PINS" category="ADDONS">
+		ApexGatherer:TogglePins("worldMap")
+	</Binding>
+</Bindings>
